@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
 import { api } from "@/lib/client-api";
 
 export function AccountStep({ setupCode, onDone }: { setupCode: string; onDone: () => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [show, setShow] = useState(false);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,7 +30,12 @@ export function AccountStep({ setupCode, onDone }: { setupCode: string; onDone: 
       <div><label className="label" htmlFor="email">Email</label><input id="email" name="email" type="email" required autoComplete="email" className="field" data-testid="setup-email-input" /></div>
       <div>
         <label className="label" htmlFor="password">Password</label>
-        <input id="password" name="password" type="password" required minLength={8} autoComplete="new-password" className="field" data-testid="setup-password-input" />
+        <div className="relative">
+          <input id="password" name="password" type={show ? "text" : "password"} required minLength={8} autoComplete="new-password" className="field pr-12" data-testid="setup-password-input" />
+          <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-neutral-500 hover:text-neutral-900" data-testid="setup-password-toggle">
+            {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
         <p className="mt-2 text-xs text-neutral-500">At least 8 characters. You'll use this email and password to sign in.</p>
       </div>
       {error && <p className="border-l-2 border-red-800 pl-3 text-sm text-red-800" data-testid="auth-error">{error}</p>}

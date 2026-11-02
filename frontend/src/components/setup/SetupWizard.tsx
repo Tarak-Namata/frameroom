@@ -10,8 +10,8 @@ import { ColorStep } from "./ColorStep";
 type Step = "code" | "account" | "logo" | "color";
 
 const COPY: Record<Step, { title: string; subtitle: string }> = {
-  code: { title: "Enter your setup code.", subtitle: "Your hosting panel shows a setup code for this Frameroom. It keeps strangers from claiming your studio." },
-  account: { title: "Create your studio.", subtitle: "You'll be the only owner. This takes about a minute — no files to edit." },
+  code: { title: "Enter your setup code.", subtitle: "This Frameroom is protected by a setup code (the SETUP_CODE value set when it was installed — check your hosting panel's environment settings). It stops strangers from claiming your studio." },
+  account: { title: "Create your studio.", subtitle: "You'll be the only owner. It takes about a minute, with no files to edit. You can change everything later in Settings." },
   logo: { title: "Add your logo.", subtitle: "It appears at the top of every client gallery. You can skip this and add it later." },
   color: { title: "Pick your color.", subtitle: "Used for buttons and highlights in your client galleries." },
 };

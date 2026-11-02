@@ -1,7 +1,11 @@
 # One-click friendly: no variables are required. Set APP_URL for correct share links.
+# By default the image is built straight from GitHub, so this file works on its own
+# (e.g. Hostinger's "Deploy" button). To build from a local checkout instead, run:
+#   FRAMEROOM_BUILD_CONTEXT=. docker compose up -d --build
 services:
   frameroom:
-    build: .
+    build:
+      context: ${FRAMEROOM_BUILD_CONTEXT:-https://github.com/Tarak-Namata/frameroom.git#main}
     image: frameroom:latest
     restart: unless-stopped
     ports:

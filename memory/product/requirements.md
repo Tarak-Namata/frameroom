@@ -156,3 +156,8 @@ In the Selections tab, show commented-but-unselected photos in a separate sectio
 ---
 # Round 6: Self-serve trial + problem reporting (user's words, verbatim) — send after Round 5 finishes
 "For now, make the demo mode and setup wizard good enough that someone can try the app without my help, and add a "Report a problem" link in Settings that opens a GitHub issue."
+
+## Round 6 decision: repo (user's words, verbatim)
+"The GitHub repo exists and is public: https://github.com/Tarak-Namata/frameroom  Use it as the REPO_URL (single constant or env var) everywhere: README links, footer, "Report a problem" link (https://github.com/Tarak-Namata/frameroom/issues), and the Deploy button. Remove the YOUR-USERNAME placeholder.  The repo is empty (no README, LICENSE, or .gitignore yet), so include all three in the code you push: README, MIT LICENSE, and a .gitignore (node_modules, .env, uploads, database files)."
+"No real secrets or .env in the repo."
+"Don't add extra features beyond this list without asking me."

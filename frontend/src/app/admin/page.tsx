@@ -6,6 +6,7 @@ import { PageHeader, Empty } from "@/components/PageHeader";
 import { GalleryCard } from "@/components/GalleryCard";
 import { EmailBanner } from "@/components/selections/EmailBanner";
 import { NewSelections } from "@/components/selections/NewSelections";
+import { GettingStarted } from "@/components/GettingStarted";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,7 @@ export default async function Dashboard() {
       <PageHeader eyebrow="Overview" title={`Hello, ${user?.name.split(" ")[0]}.`}
         action={<Link href="/admin/galleries?new=1" className="btn-primary" data-testid="dashboard-new-gallery-button">New gallery</Link>} />
       <div className="mb-8"><EmailBanner /></div>
+      <GettingStarted />
       <NewSelections />
       <div className="grid grid-cols-2 border-l border-t border-neutral-200 lg:grid-cols-4">
         {stats.map((s, i) => (

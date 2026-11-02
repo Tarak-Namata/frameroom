@@ -9,6 +9,7 @@ import { HeartButton } from "./HeartButton";
 import { ProofBar } from "./ProofBar";
 import { IdentifyModal } from "./IdentifyModal";
 import { ThemeToggle } from "../ThemeToggle";
+import { REPO_URL } from "@/lib/repo";
 
 type Props = { slug: string; title: string; clientName: string | null; date: string; photos: PublicPhoto[]; brand: Brand; proofing: ProofState };
 
@@ -72,7 +73,7 @@ export function ClientGallery({ slug, title, clientName, date, photos, brand, pr
           <p className="px-2 py-20 font-serif text-2xl font-light text-neutral-500" data-testid="client-gallery-empty">{onlyFavs ? "No favorites yet — tap a heart to add one." : "Photos are on their way."}</p>
         )}
       </section>
-      <footer className="px-5 pb-6 pt-6 sm:px-12 lg:px-20"><p className="caption">Delivered with Frameroom</p></footer>
+      <footer className="px-5 pb-6 pt-6 sm:px-12 lg:px-20"><p className="caption">Delivered with <a href={REPO_URL} target="_blank" rel="noreferrer" className="underline-offset-4 hover:text-neutral-900 hover:underline" data-testid="footer-repo-link">Frameroom</a></p></footer>
       {photos.length > 0 && <ProofBar p={p} onlyFavs={onlyFavs} setOnlyFavs={setOnlyFavs} />}
       {index !== null && <Lightbox photos={photos} index={index} setIndex={setIndex} src={src} p={p} />}
       <IdentifyModal open={p.askIdentity} onClose={() => p.setAskIdentity(false)} onSubmit={p.identify} />

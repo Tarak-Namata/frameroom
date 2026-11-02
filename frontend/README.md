@@ -1,27 +1,30 @@
-<!-- Deploy to Hostinger button — replace the link below once the template is published -->
 <p>
-  <a href="#deploy-to-hostinger"><img alt="Deploy to Hostinger" src="https://img.shields.io/badge/Deploy%20to-Hostinger-673DE6?style=for-the-badge" /></a>
+  <a href="https://www.hostinger.com/docker-hosting?compose_url=https://raw.githubusercontent.com/Tarak-Namata/frameroom/main/docker-compose.yml"><img alt="Deploy on Hostinger" src="https://assets.hostinger.com/vps/deploy.svg" /></a>
 </p>
 
 # Frameroom
 
 **Your studio's gallery and proofing, self-hosted, no subscription.**
 
+[GitHub](https://github.com/Tarak-Namata/frameroom) · [Report a problem](https://github.com/Tarak-Namata/frameroom/issues) · MIT licensed
+
 Frameroom is a free, open-source client gallery app for photographers, an alternative to Pixieset and ShootProof that you own. Upload a shoot and send your client a private link, with a password if you like. Clients get a clean, mobile-friendly gallery where they can heart favorites, leave comments, submit their picks and download everything. Deploy it with one click and finish setup in your browser. There are no files to edit and no other services to sign up for.
 
-> **Want to look around first?** Set `DEMO_MODE=true` on a fresh install. It fills Frameroom with a sample studio, three galleries and some client selections. The demo gallery link and password appear on the login screen.
+> **Want to look around first?** Set `DEMO_MODE=true` on a fresh install. It fills Frameroom with a sample studio, three galleries and some client selections. The login and setup screens then show a short "try it yourself" guide with the demo gallery link and password, so anyone can explore without help. For a public demo, leave `SETUP_CODE` unset so the first visitor can create the account.
 
 ## One-click setup (recommended)
 
-1. Click **Deploy to Hostinger** above.
+1. Click **Deploy on Hostinger** above.
 2. When asked for settings, enter your **APP_URL** (the web address of your gallery site, e.g. `https://gallery.yourstudio.com`). That's the only setting we recommend. Everything else has sensible defaults.
 3. Open your Frameroom address. A short setup wizard walks you through:
    - creating your studio account (you're the only owner),
    - uploading your logo,
    - picking your brand color.
-4. Done. Add a client, create a gallery, upload photos, and share the link.
+4. Done. A "Getting started" checklist on your dashboard walks you through adding a client, creating a gallery, uploading photos and sharing the link.
 
 After the first account is created, the setup wizard is switched off for good.
+
+Something not working? Use **Settings → Report a problem**. It opens a pre-filled [GitHub issue](https://github.com/Tarak-Namata/frameroom/issues) with your version and setup type, and never includes your photos or passwords.
 
 > **Optional: setup code.** If your site will be public before you finish setup, add a `SETUP_CODE` setting (any phrase). The wizard will then ask for that code before anyone can create the owner account. After 5 wrong codes the wizard pauses for 15 minutes.
 
@@ -51,11 +54,13 @@ Email (SMTP) is optional. You can connect it any time later from **Settings → 
 ## Self-hosting with Docker (for technical users)
 
 ```bash
-git clone https://github.com/your-org/frameroom.git
+git clone https://github.com/Tarak-Namata/frameroom.git
 cd frameroom
 cp .env.example .env      # optional — edit APP_URL
-docker compose up -d
+FRAMEROOM_BUILD_CONTEXT=. docker compose up -d --build
 ```
+
+Without `FRAMEROOM_BUILD_CONTEXT=.`, Compose builds the image straight from the GitHub repo. That's how the one-click deploy works with just `docker-compose.yml`.
 
 Open <http://localhost:3000> and follow the setup wizard. Everything is stored in the `frameroom-data` volume: the database, photos, and an auto-generated session secret.
 
@@ -96,7 +101,7 @@ Next.js (App Router, TypeScript) · Tailwind CSS · Prisma (SQLite / Postgres) �
 
 ## Contributing
 
-Pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the ground rules, the project layout and how to run it locally.
+Pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the ground rules, the project layout and how to run it locally. Found a bug? [Open an issue](https://github.com/Tarak-Namata/frameroom/issues).
 
 ## License
 

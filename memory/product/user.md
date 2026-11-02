@@ -7,3 +7,4 @@
 - Payments dropped for slices 1-2. Future: photographer connects OWN Stripe keys in settings; Frameroom never touches money. Focus: galleries, share links, proofing.
 - Tagline: "Your studio's gallery and proofing, self-hosted, no subscription." Wants contributor-friendly clean code, light+dark mode, GPS stripping.
 - No tester yet; will find one after Round 5/6. Wants app usable by a stranger with zero hand-holding.
+- GitHub: https://github.com/Tarak-Namata/frameroom (public, empty). Wants code pushed there. Strict: no extra features without asking.

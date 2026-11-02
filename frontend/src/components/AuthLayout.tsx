@@ -1,5 +1,6 @@
 import { Aperture } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { REPO_URL } from "@/lib/repo";
 
 export const TAGLINE = "Your studio's gallery and proofing, self-hosted, no subscription.";
 
@@ -30,7 +31,7 @@ export function AuthLayout({ eyebrow, title, subtitle, children, extra }: Props)
           <div className="mt-10">{children}</div>
           {extra}
         </div>
-        <p className="caption">MIT licensed · self-hosted · no subscription</p>
+        <p className="caption">MIT licensed · self-hosted · no subscription · <a href={REPO_URL} target="_blank" rel="noreferrer" className="underline-offset-4 hover:text-neutral-900 hover:underline" data-testid="footer-repo-link">GitHub</a></p>
       </section>
     </main>
   );

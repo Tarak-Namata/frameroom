@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Aperture, GalleryHorizontalEnd, LayoutGrid, LogOut, Settings, Users } from "lucide-react";
 import { api } from "@/lib/client-api";
 import { ThemeToggle } from "./ThemeToggle";
+import { REPO_URL } from "@/lib/repo";
 
 const items = [
   { href: "/admin", label: "Overview", icon: LayoutGrid, id: "nav-dashboard" },
@@ -41,6 +42,7 @@ export function AdminNav({ studioName, userName, unread }: { studioName: string;
         ))}
       </nav>
       <div className="lg:mt-auto">
+        <a href={REPO_URL} target="_blank" rel="noreferrer" className="caption mb-4 hidden hover:text-neutral-900 lg:block" data-testid="nav-repo-link">Frameroom on GitHub</a>
         <p className="mb-3 hidden truncate text-sm text-neutral-600 lg:block">{userName}</p>
         <div className="flex items-center gap-1">
           <button onClick={logout} className="btn-ghost px-3" data-testid="nav-logout"><LogOut className="h-4 w-4" /> <span className="hidden sm:inline">Log out</span></button>

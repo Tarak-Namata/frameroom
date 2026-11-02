@@ -5,6 +5,7 @@ import { PageHeader } from "../PageHeader";
 import { BrandingForm } from "./BrandingForm";
 import { EmailForm } from "./EmailForm";
 import { GeneralForm } from "./GeneralForm";
+import { ReportProblem } from "./ReportProblem";
 
 export type PublicSettings = ReturnType<typeof publicSettings>;
 
@@ -14,11 +15,11 @@ const TABS = [
   { id: "general", label: "General" },
 ];
 
-export function SettingsTabs({ settings, appUrlFromEnv, initialTab }: { settings: PublicSettings; appUrlFromEnv: string | null; initialTab?: string }) {
+export function SettingsTabs({ settings, appUrlFromEnv, initialTab, report }: { settings: PublicSettings; appUrlFromEnv: string | null; initialTab?: string; report: Record<string, string> }) {
   const [tab, setTab] = useState(TABS.some((t) => t.id === initialTab) ? initialTab! : "branding");
   return (
     <div className="max-w-3xl">
-      <PageHeader eyebrow="Studio" title="Settings" />
+      <PageHeader eyebrow="Studio" title="Settings" action={<ReportProblem details={report} />} />
       <div className="mb-12 flex gap-1 overflow-x-auto border-b border-neutral-200" role="tablist">
         {TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} data-testid={`settings-tab-${t.id}`}

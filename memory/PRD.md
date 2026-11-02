@@ -47,6 +47,13 @@ Real Next.js + Prisma running on the preview port; bcrypt + httpOnly session; lo
 - Export CSV = every selected OR commented photo (filename, selected, comment, client_name, client_email, submitted_at), selected first; "Selected only" = filename list for Lightroom
 - Selections tab shows commented-but-unselected photos under "Notes on other photos"
 
+## Round 6 — Self-serve trial, Report a problem, repo (2026-11-02)
+- REPO_URL constant (src/lib/repo.ts, override NEXT_PUBLIC_REPO_URL) = https://github.com/Tarak-Namata/frameroom used in README, footers (auth, client gallery, admin nav), Report a problem, Deploy button
+- Settings → "Report a problem" opens a pre-filled GitHub issue (version, DB type, storage, email/demo flags, browser — no secrets)
+- Self-serve: DemoCard "try it yourself" 2-step guide (client view + owner side; explains when the owner is already claimed); wizard copy clarified + password show/hide; dashboard "Getting started" checklist (auto-hides when done)
+- Deploy on Hostinger button (official compose_url format); docker-compose builds from the GitHub repo by default (FRAMEROOM_BUILD_CONTEXT=. for local)
+- Repo root = /app/frontend; .gitignore covers node_modules, .next, .env*, data/, uploads, *.db, .session-secret; dry-run shows 208 files, no secrets
+
 ## Backlog
 - P1: styled confirm modal (replaces native confirm()), regenerate share link, gallery cover choice, photo reordering
 - P2 (later slices): favorites/proofing, expiry, watermarking, email notifications, print store
