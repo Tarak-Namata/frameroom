@@ -1,0 +1,42 @@
+{
+  "summary": "Rounds 4 and 5 tested end-to-end on the fresh demo DB. Before setup: /setup shows demo-card (gallery /g/YKcXkIOxvNXm, password lumen-2699). The logged-out client view rejects a wrong password with a friendly error, then shows 28 photos, '0 of 30 selected' and the Lumen logo. Wizard (frame-2026, owner@frameroom.dev/frameroom123, blank studio, logo skipped): the studio name stays 'Lumen & Co. Photography' and the dashboard shows 3 galleries, 3 clients, 78 photos and the Okafor new-selection. However, the wizard's color step overwrote the demo accent #A38258 with #18181B (BUG). Demo selections are correct (Priya: open, 7 hearts and 3 comments; Adaeze: submitted, 10 hearts). Round 5 CSV, API and UI: selected rows come first (yes), then comment-only rows (no). Un-hearted rows and blank comments are excluded, quoting and escaping are correct, submitted_at is empty while open and set after submit, and ?only=selected gives the 'filename' list. A UI-created comment-only note via the lightbox shows in selection-notes-section/selection-notes-items, and the pick shows in selection-items. Both downloads work from the UI with sensible filenames. For GPS, gps.jpg, gps.png, gps.webp and a PIL JPEG all come back with no GPS IFD, the Make tag kept and identical pixels. /api/health returns {status:ok, database:ok}. A 30-file dropzone upload showed progress and all 30 succeeded in about 4s. Dark mode toggles from the login, admin nav and public bar, and persists via localStorage fr-theme. Readable on the dashboard, editor, selections, settings, modal, public gallery and at mobile 390. The logo gets the white plate on the public bar. Tagline and meta description are correct. Regression: 57/57 earlier tests pass after two expected test updates. Reopen, logout and the demo-card on /login all work.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "src/lib/demo-seed.ts", "issue": "The seed is not transactional. If it fails partway, some rows exist and demoSeededAt stays null. The next boot then skips the seed ('already has data'), leaving a half-seeded demo with no demo-card."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Setup wizard ColorStep", "issue": "useState('#18181B') is hard-coded and 'Finish setup' PATCHes it, so the demo accent #A38258 is overwritten with charcoal. After setup, the demo galleries lose the Lumen & Co. accent: settings shows #18181B and the Submit button is no longer tan. This also resets any accent already present. Fix: initialise from the current settings.accentColor, or only PATCH if the user changed it.", "selector": "[data-testid='setup-finish-button']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Settings > Branding (dark mode)", "issues": ["The AccentPicker preview button uses the raw `value` with hard-coded text-white. In dark mode, a charcoal accent blends into the dark card, and the real client galleries swap it to #E7E5E4, so the preview doesn't match 'how buttons look'. A very light accent would also give white-on-white text. Use accentVars/--studio-accent-fg.", "The LogoField preview has no light plate in dark mode. The dark Lumen logo is barely visible in the Settings logo box, and probably on the wizard's logo step too. The plate (dark:bg-white/90) is only applied in public/StudioMark.tsx."]},
+      {"screen": "Auth screens mobile (390px)", "issues": ["data-testid=tagline sits in the left image panel, which is hidden below lg. So the tagline doesn't appear on mobile auth screens (only the 'MIT licensed · self-hosted · no subscription' footer)."]},
+      {"screen": "Gallery editor during a large upload", "issues": ["Uploaded photos only appear after the whole batch finishes; the grid stays 'No photos yet' while progress runs. Optional: refresh the grid as each file completes."]},
+      {"screen": "Public grid", "issues": ["A hearted (white, filled) heart on very light photos (e.g. wedding-01) is hard to see. Consider a stronger drop shadow or an accent fill."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_frameroom_round45.py", "/app/backend/tests/test_frameroom_round3_proofing.py", "/app/backend/tests/test_frameroom_round2.py", "/app/test_reports/pytest/pytest_round45.xml", "/app/test_reports/pytest/pytest_regression_r45.xml"],
+  "action_items": [
+    "ColorStep: don't overwrite the existing accent. Default to the current settings.accentColor (demo #A38258).",
+    "AccentPicker preview: render with accentVars and --studio-accent / --studio-accent-fg so it reflects dark mode and text contrast.",
+    "LogoField preview: add the dark-mode light plate (dark:bg-white/90 p-1) like StudioMark.",
+    "Optional: show the tagline on mobile auth screens.",
+    "Optional: make the demo seed transactional or resumable."
+  ],
+  "critical_code_review_comments": [
+    "csv/route.ts is correct. Comments are trimmed to null on save, so blank comments are excluded. Sorting puts hearted rows first, then by photo createdAt.",
+    "strip-location.ts edits losslessly and falls back to re-encoding on parse errors. Verified for JPEG, PNG and WebP. XMP GPS dropping wasn't tested with a real XMP file.",
+    "demo-seed: the `running` flag is never reset; harmless since it runs once per process.",
+    "One transient React hydration-mismatch warning on the first /setup load (dev mode, <main> vs <meta charset>). It didn't reproduce on later loads of /login; it's likely a dev artifact, keep an eye on it."
+  ],
+  "updated_files": ["/app/backend/tests/test_frameroom_round45.py (new)", "/app/backend/tests/test_frameroom_round3_proofing.py (CSV assertion updated to the Round 5 format)", "/app/backend/tests/test_frameroom_round2.py (studioName accepts the demo name; accent and logo checks only run on the real DB)"],
+  "success_rate": {"backend": "100% (13/13 new, 57/57 regression)", "frontend": "~92% (one wizard accent bug plus minor design issues)"},
+  "seed_data_creation": "Owner created via the wizard: owner@frameroom.dev / frameroom123 (setup code frame-2026). Test galleries were deleted. The TEST Note Client selection on the wedding gallery was removed from the DB, and the Okafor selection was restored to submitted with seenAt=NULL (so it's unread again).",
+  "test_credentials": "owner@frameroom.dev / frameroom123; demo gallery /g/YKcXkIOxvNXm password lumen-2699",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The demo DB now has an owner. Run the backend suites with `-n 0` for single files (pytest.ini uses xdist). GET /api/admin/galleries/{id}/selections marks submitted selections as seen, so tests that call it on the portraits gallery clear the dashboard 'New selections'. Gallery ids: wedding cmvziw86r0002mnb1by7w42er (slug YKcXkIOxvNXm, max 30, protected), portraits cmvziwckq0025mnb16zveluh6 (slug _j2wlds-1_Nc), brand cmvziwg9c0046mnb169uuafv1."
+}

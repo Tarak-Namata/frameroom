@@ -1,0 +1,33 @@
+# One-click friendly: no variables are required. Set APP_URL for correct share links.
+services:
+  frameroom:
+    build: .
+    image: frameroom:latest
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: 3000
+      APP_URL: ${APP_URL:-}
+      SETUP_CODE: ${SETUP_CODE:-}
+      DEMO_MODE: ${DEMO_MODE:-false}
+    volumes:
+      - frameroom-data:/app/data
+
+  # Optional Postgres: uncomment, then set DATABASE_URL=postgresql://frameroom:frameroom@db:5432/frameroom
+  # db:
+  #   image: postgres:16-alpine
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: frameroom
+  #     POSTGRES_PASSWORD: frameroom
+  #     POSTGRES_DB: frameroom
+  #   volumes:
+  #     - frameroom-pg:/var/lib/postgresql/data
+
+volumes:
+  frameroom-data:
+  # frameroom-pg:

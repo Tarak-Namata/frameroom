@@ -1,0 +1,119 @@
+// Postgres variant. Used automatically when DATABASE_URL starts with postgres:// or postgresql://
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Settings {
+  id          Int      @id @default(1)
+  studioName  String   @default("My Studio")
+  logoKey     String?
+  accentColor String   @default("#18181B")
+  appUrl      String?
+
+  smtpHost    String?
+  smtpPort    Int?
+  smtpSecure  Boolean  @default(false)
+  smtpUser    String?
+  smtpPassEnc String?
+  smtpFrom    String?
+
+  emailBannerDismissed Boolean   @default(false)
+  lastEmailError       String?
+  lastEmailErrorAt     DateTime?
+
+  demoSlug     String?
+  demoPassword String?
+  demoSeededAt DateTime?
+
+  updatedAt   DateTime @updatedAt
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  notes     String?
+  createdAt DateTime  @default(now())
+  galleries Gallery[]
+}
+
+model Gallery {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  passwordHash  String?
+  maxSelections Int?
+  clientId     String?
+  client       Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  photos       Photo[]
+  selections   Selection[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Photo {
+  id          String   @id @default(cuid())
+  galleryId   String
+  gallery     Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  filename    String
+  originalKey String
+  largeKey    String
+  thumbKey    String
+  mime        String
+  size        Int
+  width       Int
+  height      Int
+  createdAt   DateTime @default(now())
+  picks       SelectionItem[]
+
+  @@index([galleryId])
+}
+
+model Selection {
+  id          String          @id @default(cuid())
+  galleryId   String
+  gallery     Gallery         @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  clientName  String
+  clientEmail String
+  status      String          @default("open")
+  submittedAt DateTime?
+  seenAt      DateTime?
+  items       SelectionItem[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([galleryId, clientEmail])
+}
+
+model SelectionItem {
+  id          String    @id @default(cuid())
+  selectionId String
+  selection   Selection @relation(fields: [selectionId], references: [id], onDelete: Cascade)
+  photoId     String
+  photo       Photo     @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  hearted     Boolean   @default(false)
+  comment     String?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([selectionId, photoId])
+}
+
+model LoginAttempt {
+  identifier  String    @id
+  count       Int       @default(0)
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+}

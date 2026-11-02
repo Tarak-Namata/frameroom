@@ -1,0 +1,40 @@
+{
+  "summary": "Round 2 testing (one-click setup). Started on a fresh DB with the wizard first. The UI wizard works end to end: / redirects to /setup, the code step comes first, a wrong code shows a friendly error, frame-2026 advances, the account step uses native minLength plus server-side friendly messages (owner created as Ada Lens / Lens & Light / owner@frameroom.dev), the logo PNG upload shows a preview, the terracotta preset gives #C85A32, and Finish lands on /admin. After setup the wizard is locked: GET returns setupComplete:true; POST returns 403 'Your studio is already set up. Please sign in instead.' even with the correct code (including checkOnly); /setup redirects to /login when logged out and to /admin when logged in; there is exactly one User row (id 'owner', bcrypt $2 hash). The session secret was auto-generated at data/.session-secret (mode 0600). Settings: tabs are Branding, Email (labelled OPTIONAL) and General, with no payment, Stripe, billing or plan text anywhere (UI and source grep). Branding shows the saved logo and #C85A32. Email: saving gives a Connected badge. GET settings returns only hasPassword (the password and the encrypted value are never returned). Sending a test email to smtp.invalid.example gives the friendly toast 'That email server address couldn't be found...' with HTTP 422. Re-saving with a blank password keeps hasPassword=true. Disconnect gives 'Not set up' and clears all fields. General: app-url-input is readOnly with the APP_URL explanation, and gallery-share-url uses APP_URL. Friendly errors: wrong login shows 'That email and password don't match. Please try again.'; .txt and >25MB uploads show friendly toasts; a wrong gallery password shows 'That password isn't right...'; app/error.tsx exists. Regression passes: add client, create gallery, assign client, upload 2 photos, enable a share password, logout, logged-out public gate (wrong, then right), branded logo and accent button, lightbox (counter, next, Esc), and a download-all zip containing 2 files. Pytest: 41/41 pass (the new round-2 file plus the round-1 file; the round-1 lockout XFF bypass and PATCH invalid clientId bugs are now fixed).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "src/lib/ratelimit.ts (login, gallery, smtp-test, setup-code)", "issue": "Failure counts never decay. recordFailure increments forever (until a success clears it) and has no time window, so 5 failures spread over days still trigger a 15-minute lock. 'smtp-test' is never cleared on a successful send, so 5 cumulative failed tests (normal while someone is fixing SMTP config) lock the feature. I hit 4/5 during testing and deleted the row. Suggestion: reset the count when the last attempt is older than LOCK_MS, and clearFailures('smtp-test') on success."},
+      {"endpoint": "POST /api/auth/setup", "issue": "The setup-code lockout uses a single global key ('setup-code'), so anyone can keep the real owner out of the wizard for 15 minutes by sending 5 wrong codes while the instance is unclaimed. Low risk; mention it in the README or use a per-IP key plus a higher global key."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "LogoField (used in Settings Branding and the setup wizard)", "issue": "Hydration mismatch: img src '/api/logo?v=${Date.now()}' is computed during render/initial state, so the server and client values differ. React logs 'A tree hydrated but some attributes ... didn't match' and the Next dev overlay shows '1 Issue' on /admin/settings. Use a stable version (e.g. settings updatedAt) or set the cache-buster only after an upload.", "selector": "[data-testid='logo-preview'] img", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Setup account step", "issues": ["A short password shows only the browser's native tooltip ('Please lengthen this text to 8 characters...'), not the app's styled error. The server's friendly message is only seen if native validation is bypassed. The helper text 'At least 8 characters' is shown, so this is acceptable."]},
+      {"screen": "Uploader toast", "issues": ["The client-side .txt toast reads 'a.txt: only JPEG, PNG or WebP allowed', while the server message is friendlier ('this file type isn't supported. Please upload JPEG, PNG or WebP photos.'). Consider using the same wording."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_frameroom_round2.py", "/app/backend/tests/test_frameroom_api.py", "/app/test_reports/pytest/pytest_results_round2.xml"],
+  "action_items": [
+    "Fix the LogoField hydration mismatch (Date.now() in the render/initial state of the logo src).",
+    "Ratelimit: add a time window/decay to failure counts, and clear 'smtp-test' failures on a successful test send.",
+    "Optional: align the client-side upload toast wording with the server's friendly message; consider a per-IP setup-code lock."
+  ],
+  "critical_code_review_comments": [
+    "Setup route: the hasOwner() check runs before the code check, and the fixed id 'owner' makes concurrent setups fail on the PK. Correct single-owner guarantee.",
+    "secrets.ts: AES-256-GCM keyed from sessionSecret; publicSettings exposes only hasPassword. If SESSION_SECRET changes, decrypt fails, which is handled with a friendly 'enter it again' message. Good.",
+    "When APP_URL is unset, setup stores appUrl from x-forwarded-host/host of the first request. Fine for self-hosting; the owner can change it in General.",
+    ".env.example and docker-compose.yml need no required variables (env_file required:false, APP_URL/SETUP_CODE default empty). Docker was not executed."
+  ],
+  "updated_files": ["/app/backend/tests/test_frameroom_round2.py"],
+  "success_rate": {"backend": "100% (41/41)", "frontend": "100% of requested flows; 1 low-priority hydration warning"},
+  "test_credentials": "owner@frameroom.dev / frameroom123 (created through the wizard). SETUP_CODE=frame-2026",
+  "seed_data_creation": "Owner created through the wizard. The settings now hold studio 'Lens & Light', accent #C85A32 and a logo (a 200x80 orange PNG). TEST_ clients and galleries were deleted, SMTP was disconnected, and the 'smtp-test' LoginAttempt row was deleted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Setup is complete, so the wizard can't be retested without resetting data/frameroom.db (backup of round 1 at /app/frontend_data_round1_backup). Run: REACT_APP_BACKEND_URL=<url> pytest /app/backend/tests/ -v. Note that each test_test_email_friendly run adds a 'smtp-test' failure (lock after 5), so delete that LoginAttempt row in sqlite if needed. ClientSelect loads options asynchronously, so wait for more than one option before selecting. Sonner toasts expire after about 4s, so read them quickly.",
+  "rca of the issue": "Hydration: LogoField builds src with Date.now() during SSR and again on the client, which gives different query strings."
+}

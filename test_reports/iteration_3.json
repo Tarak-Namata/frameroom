@@ -1,0 +1,42 @@
+{
+  "summary": "Round 3 (Proofing) tested end-to-end. Backend: a new pytest suite with 16 tests, all passing (max-selections validation, identity, re-attach by email, limit, comments, submit, lock, notifications, mark-read, CSV escaping, reopen, resubmit, a lowered limit blocking submit, auth on admin endpoints, the password gate). The round 1 and 2 regression suites also pass (41/41: login, upload, password gate, zip). UI was tested with Playwright on mobile (390px) and desktop. The identify modal appears on the first heart from both the grid and the lightbox, and the pending heart is applied afterwards. The counter shows '1 of 2' and '2 of 2', and with no limit it shows '1 selected' and then '4 selected'. A 3rd heart over the limit is blocked with a friendly toast, and removing a heart frees a slot. A lightbox comment on a non-hearted photo shows the grid indicator. The favorites filter shows 2 of 4 tiles. Submit shows the confirm modal, the exact toast and the Submitted state, and further hearts are blocked with a friendly message. The client never sees email wording, and the state survives a reload. The same email in a new context re-attaches the same selection, case-insensitively. On the admin side, the dashboard New selections item, gallery-unread-badge, nav-unread-badge and selections-tab-unread all appear and all clear after opening the Selections tab and navigating. The selection card shows its status, '2 of 2 selected' and comments, and the CSV downloads with header filename,comment. Reopen with confirm works (IN PROGRESS) and the client can edit and resubmit. The email banner appears on both the dashboard and the Selections tab, the link goes to /admin/settings?tab=email, and dismissing it is permanent in both places after reload. Settings shows email-off-note. The SMTP failure test with smtp.invalid.example still saved the submission (1.2s), showed the same client message and the in-app item, and Settings showed email-last-error with a plain message. Lightbox next/ArrowRight/Escape and download-all zip work. No functional bugs found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/g/[slug]/proofing/submit", "issue": "notifyOwner is awaited inside the request. A blackholed SMTP host (rather than a DNS failure) would keep the client waiting up to connectionTimeout 15s + greeting 10s before the success toast. Consider firing it without awaiting, or adding a short timeout."},
+      {"endpoint": "PUT /api/g/[slug]/proofing/items/[photoId]", "issue": "The limit check (count, then upsert) is not atomic. Concurrent heart requests could exceed maxSelections. Submit re-checks, so the impact is low."},
+      {"endpoint": "DELETE /api/admin/settings/email", "issue": "Disconnecting SMTP does not clear lastEmailError/lastErrorAt, so a stale 'Last email didn't go out' stays in Settings after email is turned off."},
+      {"endpoint": "GET /api/admin/selections/[id]/csv", "issue": "The CSV only includes hearted photos. Comments on non-hearted photos (allowed by spec) are dropped from the export. This matches 'CSV of filenames' but the photographer loses those comments in the export."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Selections tab, Reopen", "issues": ["It uses the native window.confirm() instead of the app's styled dialog, which is inconsistent with the rest of the UI. Automated tests need a dialog handler."]},
+      {"screen": "Public gallery, mobile 390px", "issues": ["Sonner toasts (limit/submitted messages) appear at the bottom and cover the sticky proof bar (counter + Submit) while they are visible."]},
+      {"screen": "Settings > Email", "issues": ["The status pill says 'CONNECTED' right after saving an unverified/unreachable host, even while email-last-error is shown. Consider 'Saved, not verified' or reflecting the last error."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_frameroom_round3_proofing.py", "/app/test_reports/pytest/pytest_results_round3.xml", "/app/backend/tests/test_frameroom_api.py", "/app/backend/tests/test_frameroom_round2.py"],
+  "action_items": [
+    "Optional: don't block the submit response on SMTP (send in the background, or use a shorter timeout).",
+    "Optional: clear lastEmailError when SMTP is disconnected.",
+    "Optional: replace window.confirm in SelectionCard reopen with the app dialog.",
+    "Optional: move the mobile toasts to the top, or offset them above the proof bar."
+  ],
+  "critical_code_review_comments": [
+    "Proofing cookie fr_pr_{galleryId} is signed with sid+gid and checked against galleryId. Good.",
+    "Anyone who knows a client's email (and the gallery link) can attach to that client's selection. This matches the spec ('same email re-attaches') but is worth documenting.",
+    "GET /api/admin/galleries/[id]/selections has a side effect (it marks items seen). Acceptable, but a prefetch could mark items read without the owner seeing them.",
+    "Submit with count > max (after the owner lowers the limit) returns a clear 'remove N' message. Good."
+  ],
+  "updated_files": ["/app/backend/tests/test_frameroom_round3_proofing.py"],
+  "success_rate": {"backend": "100% (16/16 new + 41/41 regression)", "frontend": "100% of requested flows"},
+  "test_credentials": "owner@frameroom.dev / frameroom123",
+  "seed_data_creation": "Created and then deleted TEST_UI_Limit and TEST_UI_NoLimit (and the pytest TEST_ galleries). Left as-is: the 'Proof Test' gallery is untouched. emailBannerDismissed=true (dismissed during the test). SMTP is now disconnected (by the round 2 regression test_remove), but lastEmailError from the failure test still exists. The smtp-test LoginAttempt row was deleted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run: REACT_APP_BACKEND_URL=<url> pytest /app/backend/tests/ -v (pytest.ini uses xdist). Reopen uses window.confirm, so in Playwright add page.on('dialog', accept). The banner is already dismissed. To retest it, set Settings.emailBannerDismissed=0 in frontend/data/*.db. LoginAttempt's PK column is 'identifier'. The max-selections input is type=number, so non-numeric text becomes empty.",
+  "rca of the issue": "No functional bugs. Stale lastError: the DELETE email settings handler resets the smtp* fields but not lastEmailError/lastEmailErrorAt."
+}

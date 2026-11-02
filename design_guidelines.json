@@ -1,0 +1,227 @@
+{
+  "project_overview": {
+    "name": "Frameroom",
+    "description": "An open-source, self-hostable editorial gallery web app for independent photographers. Replaces paid gallery platforms like Pixieset and ShootProof with an ultra-clean, minimal, light, high-performance experience.",
+    "stack": "Next.js (App Router, JavaScript/JS), Tailwind CSS, SQLite/Prisma, S3/Local Storage, Lucide Icons",
+    "theme": "Clean, Minimal, Light, Editorial"
+  },
+  "archetype_and_aesthetic": {
+    "archetype": "Swiss & Editorial Minimalist (Invisible UI)",
+    "core_philosophy": "The user interface recedes into the background so the photography acts as the primary visual subject. Zero distraction, ultra-sharp edge alignments, high typography contrast, generous white space, and subtle tactile micro-interactions.",
+    "tone": "Sophisticated, high-fashion gallery, serene, professional, trustworthy",
+    "anti_patterns": [
+      "No heavy glossy gradients or neon glow effects",
+      "No rounded bubbly cards with heavy drop shadows",
+      "No dark mode by default for public galleries (keep light gallery ambient)",
+      "No Inter font for display headlines - use high-contrast editorial serif (e.g. Playfair Display or Cormorant Garamond) paired with clean geometric sans (Plus Jakarta Sans or DM Sans)",
+      "No cluttered standard table layouts; use airy list rows with high negative space",
+      "No centered paragraph bodies; left-align content for natural reading flow"
+    ]
+  },
+  "typography": {
+    "font_family_pairing": {
+      "display_serif": "Cormorant Garamond or Playfair Display (for editorial titles, cover heroes, studio brand headers)",
+      "sans_body": "Plus Jakarta Sans or DM Sans (for UI controls, metadata, form fields, dense text)",
+      "mono_accent": "JetBrains Mono or Space Mono (for date stamps, photo counts, dimensions, copy link indicators)"
+    },
+    "google_fonts_next_config": "import { Playfair_Display, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';",
+    "scale": {
+      "h1_hero": "text-4xl sm:text-5xl lg:text-6xl font-serif font-light tracking-tight leading-tight",
+      "h2_section": "text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight leading-snug",
+      "h3_card": "text-xl sm:text-2xl font-serif font-medium tracking-tight",
+      "h4_sub": "text-lg font-sans font-semibold tracking-wide text-neutral-900",
+      "body_base": "text-base font-sans leading-relaxed text-neutral-700",
+      "body_sm": "text-sm font-sans leading-normal text-neutral-600",
+      "caption_mono": "text-xs font-mono tracking-wider uppercase text-neutral-500",
+      "button_text": "text-xs sm:text-sm font-sans font-medium uppercase tracking-widest"
+    }
+  },
+  "color_system": {
+    "mode": "Light Default with Dynamic Studio Accent Customization",
+    "palette": {
+      "background_page": "#FAFAFA",
+      "background_card": "#FFFFFF",
+      "background_subtle": "#F4F4F5",
+      "border_hairline": "#E4E4E7",
+      "border_dark": "#18181B",
+      "text_main": "#09090B",
+      "text_muted": "#71717A",
+      "text_light": "#A1A1AA",
+      "accent_default": "#18181B",
+      "accent_warm_terracotta": "#C85A32",
+      "accent_sage_green": "#4A6B5D",
+      "accent_deep_navy": "#1B2A4A",
+      "accent_champagne_gold": "#A38258",
+      "overlay_backdrop": "rgba(9, 9, 11, 0.85)",
+      "status_success": "#166534",
+      "status_error": "#991B1B"
+    },
+    "css_variables_setup": ":root { --studio-accent: #18181B; --studio-accent-hover: #27272A; --studio-bg: #FAFAFA; --studio-card: #FFFFFF; --studio-border: #E4E4E7; --studio-text: #09090B; }",
+    "tailwind_utility_map": {
+      "accent_bg": "bg-[var(--studio-accent)]",
+      "accent_text": "text-[var(--studio-accent)]",
+      "accent_border": "border-[var(--studio-accent)]",
+      "accent_ring": "focus:ring-[var(--studio-accent)]"
+    }
+  },
+  "spacing_and_layout": {
+    "container_padding": "px-4 sm:px-8 lg:px-16 py-8 sm:py-12",
+    "max_width": "max-w-7xl mx-auto",
+    "hero_cover_height": "min-h-[70vh] sm:min-h-[85vh]",
+    "bento_grid_gap": "gap-4 sm:gap-6 lg:gap-8",
+    "card_padding": "p-6 sm:p-8",
+    "border_style": "border border-neutral-200/80 rounded-none sm:rounded-sm",
+    "shadow_style": "shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.06)]"
+  },
+  "client_gallery_experience": {
+    "layout_modes": [
+      "Editorial Masonry Grid (staggered natural image ratios)",
+      "Standard Equal Grid (clean 3-column / 4-column symmetry)",
+      "Story Scrollytelling Mode (large vertical full-width focus blocks)"
+    ],
+    "key_features": [
+      "Password protection gate screen with minimalist pin/password input",
+      "Hero cover photo with studio brand logo, gallery title, client name, and date",
+      "Sticky secondary bar with layout switcher, category filter tabs (e.g. Ceremony, Reception, Portraits), and 'Download All' button",
+      "Full-screen Lightbox Viewer with keyboard arrows, zoom, photo index (e.g., 04 / 85), individual download button, and close icon",
+      "Zip file bulk downloader drawer/modal with progress indicator"
+    ]
+  },
+  "admin_dashboard_experience": {
+    "sections": [
+      "Setup First-Run Screen: Single-owner studio setup (Photographer Name, Studio Name, Email, Password, Accent Color)",
+      "Dashboard Overview: Quick stats (Active Galleries, Total Clients, Storage Used), Quick Actions ('New Gallery', 'Add Client')",
+      "Galleries List: Searchable card/table list showing status (Published/Draft/Password Protected), photo count, client name, copy link action",
+      "Gallery Detail & Editor: Cover image upload, client assignment, drag-and-drop multi-file uploader with thumb generation progress, photo grid management (reorder/delete), password setting toggle, custom slug URL copy button",
+      "Clients Manager: Searchable client directory, add/edit client modal (Name, Email, Notes, Assigned Galleries list)",
+      "Studio Settings: Studio Name, Studio Logo Upload (with preview), Accent Color Picker (presets + custom hex input), Storage quota indicator"
+    ]
+  },
+  "customization_and_branding": {
+    "accent_presets": [
+      { "name": "Minimalist Charcoal", "hex": "#18181B" },
+      { "name": "Warm Terracotta", "hex": "#C85A32" },
+      { "name": "Sage Botanical", "hex": "#4A6B5D" },
+      { "name": "Deep Midnight", "hex": "#1B2A4A" },
+      { "name": "Champagne Bronze", "hex": "#A38258" }
+    ],
+    "logo_fallback": "If no studio logo image is uploaded, render stylized studio name in Cormorant Garamond / Playfair Display display font with tracked out letters (e.g., L U M I N A R I A)."
+  },
+  "component_guidelines": {
+    "buttons": {
+      "primary": "bg-[var(--studio-accent)] text-white hover:opacity-90 active:scale-[0.99] transition-all duration-200 px-6 py-3 font-sans text-xs font-semibold tracking-widest uppercase rounded-none border border-transparent shadow-sm",
+      "secondary": "bg-white text-neutral-900 border border-neutral-300 hover:border-neutral-900 hover:bg-neutral-50 active:scale-[0.99] transition-all duration-200 px-6 py-3 font-sans text-xs font-semibold tracking-widest uppercase rounded-none",
+      "ghost": "text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 transition-colors duration-200 px-4 py-2 font-sans text-xs font-medium tracking-wide"
+    },
+    "inputs": {
+      "field": "w-full bg-white border border-neutral-300 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 rounded-none transition-colors",
+      "label": "block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-2"
+    },
+    "cards": {
+      "base": "bg-white border border-neutral-200/90 p-6 transition-all duration-200 hover:border-neutral-300 rounded-none shadow-sm"
+    },
+    "dropzone": {
+      "wrapper": "border-2 border-dashed border-neutral-300 hover:border-neutral-800 bg-neutral-50/50 hover:bg-neutral-50 p-12 text-center transition-all cursor-pointer",
+      "text": "text-sm font-sans text-neutral-600"
+    }
+  },
+  "micro_interactions_and_motion": {
+    "image_hover": "Transform scale 1.02 with 500ms ease-out timing; image overlay button opacity fade in 200ms",
+    "lightbox_transition": "Backdrop blur fade-in 200ms; image enter scale 0.98 -> 1.0 opacity 0 -> 1",
+    "copy_link_toast": "Trigger tactile Sonner toast notification: 'Link copied to clipboard'",
+    "upload_progress": "Smooth linear fill progress bar matching studio accent color"
+  },
+  "accessibility_and_contrast": {
+    "rules": [
+      "Minimum text contrast 4.5:1 on light backgrounds",
+      "Interactive focus outlines explicitly defined using ring-1 or high-contrast border offset",
+      "Always set alt tags on photo grids (using photo filename or title)",
+      "Keyboard accessibility for lightbox viewer (Escape to close, Left/Right arrows for navigation)"
+    ]
+  },
+  "testing_and_data_testid_rules": {
+    "convention": "kebab-case, role-based identifiers",
+    "mandatory_data_testids": [
+      "setup-form",
+      "setup-submit-button",
+      "login-form",
+      "login-email-input",
+      "login-password-input",
+      "login-submit-button",
+      "nav-dashboard",
+      "nav-galleries",
+      "nav-clients",
+      "nav-settings",
+      "nav-logout",
+      "create-gallery-button",
+      "gallery-card",
+      "gallery-title",
+      "gallery-share-link-button",
+      "gallery-password-toggle",
+      "dropzone-input",
+      "upload-photo-grid",
+      "add-client-button",
+      "client-form-modal",
+      "client-name-input",
+      "client-email-input",
+      "client-save-button",
+      "settings-form",
+      "studio-name-input",
+      "studio-accent-picker",
+      "save-settings-button",
+      "client-gallery-password-input",
+      "client-gallery-unlock-button",
+      "client-gallery-hero",
+      "client-gallery-photo-grid",
+      "client-gallery-download-all-button",
+      "lightbox-modal",
+      "lightbox-next-button",
+      "lightbox-prev-button",
+      "lightbox-download-button",
+      "lightbox-close-button"
+    ]
+  },
+  "sample_image_urls": [
+    {
+      "category": "Editorial Portrait",
+      "url": "https://images.unsplash.com/photo-1759925847124-dc276a15ff10?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHw0fHxlZGl0b3JpYWwlMjBwb3J0cmFpdCUyMHBob3RvZ3JhcGh5JTIwaGlnaCUyMGZhc2hpb24lMjBtaW5pbWFsaXNtfGVufDB8fHx8MTc5MzU1MjgzMHww&ixlib=rb-4.1.0&q=85",
+      "description": "Woman in black dress and gloves with hand on forehead"
+    },
+    {
+      "category": "Fashion Lookbook",
+      "url": "https://images.unsplash.com/photo-1779400203611-44f699f505ae?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxlZGl0b3JpYWwlMjBwb3J0cmFpdCUyMHBob3RvZ3JhcGh5JTIwaGlnaCUyMGZhc2hpb24lMjBtaW5pbWFsaXNtfGVufDB8fHx8MTc5MzU1MjgzMHww&ixlib=rb-4.1.0&q=85",
+      "description": "Blonde woman in black open-back dress looking over shoulder"
+    },
+    {
+      "category": "High Fashion Portrait",
+      "url": "https://images.unsplash.com/photo-1779400202870-e18aeb05e3eb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxlZGl0b3JpYWwlMjBwb3J0cmFpdCUyMHBob3RvZ3JhcGh5JTIwaGlnaCUyMGZhc2hpb24lMjBtaW5pbWFsaXNtfGVufDB8fHx8MTc5MzU1MjgzMHww&ixlib=rb-4.1.0&q=85",
+      "description": "Blonde woman in black blazer and stockings"
+    },
+    {
+      "category": "Minimalist Architectural Interior",
+      "url": "https://images.unsplash.com/photo-1782879306421-b000a09d970c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzJ8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBtaW5pbWFsaXNtfGVufDB8fHx8MTc5MzU1MjgzN3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Architectural corner with beige and white walls"
+    },
+    {
+      "category": "Modern Concrete & Wood Architecture",
+      "url": "https://images.unsplash.com/photo-1774516534086-9de6d61eea26?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzJ8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBtaW5pbWFsaXNtfGVufDB8fHx8MTc5MzU1MjgzN3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Modern concrete interior with wooden walkway and soft lighting"
+    }
+  ],
+  "instructions_to_main_agent": [
+    "Build the complete Frameroom web application in Next.js App Router using JavaScript (.js / .jsx files).",
+    "Ensure all features from Slice 1 are functional: First-run single-owner setup, Login, Admin Dashboard, Client Management (Add/Edit/List), Gallery Creation & Editing with drag-and-drop multi-photo dropzone, Photo Grid management, Share settings with password toggle and copy link, Studio Branding Settings (Logo, Studio Name, Accent Color), and Public Client Gallery view with password gate, masonry/grid views, full-screen lightbox, and download all zip functionality.",
+    "Implement studio accent color support dynamically via CSS variables `--studio-accent` applied to the public gallery view controls, buttons, and studio header.",
+    "Strictly follow the clean, minimal, light, editorial visual style: light off-white background (#FAFAFA), high contrast typography, sharp subtle borders, high negative space, zero visual fluff.",
+    "Ensure every interactive element and data input has its corresponding `data-testid` attribute as specified in `testing_and_data_testid_rules`.",
+    "Use standard Lucide icons (`lucide-react`) for UI actions."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Never use generic centered app wrappers. Keep left alignment for reading flow.",
+    "Ensure all buttons have active/hover states with smooth color/opacity transitions.",
+    "Do not use transparent header backgrounds without backdrop blur.",
+    "Ensure images have maximum height limits on mobile viewports.",
+    "Use sonner for toasts and feedback notifications.",
+    "Every key interactive element MUST contain a kebab-case data-testid."
+  ]
+}
