@@ -1,16 +1,26 @@
+# Frameroom
+
+**Free, self-hosted client galleries and proofing for photographers. No subscription.**
+
+![A Frameroom client gallery: clients heart favourites and submit their picks](docs/screenshot.jpg)
+
 <p>
   <a href="https://www.hostinger.com/docker-hosting?compose_url=https://raw.githubusercontent.com/Tarak-Namata/frameroom/main/docker-compose.yml"><img alt="Deploy on Hostinger" src="https://assets.hostinger.com/vps/deploy.svg" /></a>
 </p>
 
-# Frameroom
-
-**Your studio's gallery and proofing, self-hosted, no subscription.**
-
-[GitHub](https://github.com/Tarak-Namata/frameroom) · [Report a problem](https://github.com/Tarak-Namata/frameroom/issues) · MIT licensed
+[Try the demo mode](#try-the-demo) · [Report a problem](https://github.com/Tarak-Namata/frameroom/issues) · MIT licensed
 
 Frameroom is a free, open-source client gallery app for photographers, an alternative to Pixieset and ShootProof that you own. Upload a shoot and send your client a private link, with a password if you like. Clients get a clean, mobile-friendly gallery where they can heart favorites, leave comments, submit their picks and download everything. Deploy it with one click and finish setup in your browser. There are no files to edit and no other services to sign up for.
 
-> **Want to look around first?** Set `DEMO_MODE=true` on a fresh install. It fills Frameroom with a sample studio, three galleries and some client selections. The login and setup screens then show a short "try it yourself" guide with the demo gallery link and password, so anyone can explore without help. For a public demo, leave `SETUP_CODE` unset so the first visitor can create the account.
+## Why Frameroom
+
+- **No subscription.** Free and open source (MIT). No monthly fee, no plans, no photo limits.
+- **Your photos.** Full-resolution originals, no watermarks or ads. GPS location is removed from every upload to protect your clients.
+- **Your server.** It runs on your own server, under your own domain and brand. No tracking, and nothing is sent anywhere else.
+
+## Try the demo
+
+Set `DEMO_MODE=true` on a fresh install. It fills Frameroom with a sample studio, three galleries and some client selections. The login and setup screens then show a short "try it yourself" guide with the demo gallery link and password, so anyone can explore without help. For a public demo, leave `SETUP_CODE` unset so the first visitor can create the account.
 
 ## One-click setup (recommended)
 

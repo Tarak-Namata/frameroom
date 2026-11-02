@@ -1,0 +1,16 @@
+node_modules
+.next
+data
+.env
+.git
+*.log
+.emergent
+.ruff_cache
+backend
+frontend
+mobile
+memory
+test_reports
+tests
+frontend_data_round1_backup
+design_guidelines.json

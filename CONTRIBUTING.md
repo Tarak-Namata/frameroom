@@ -49,3 +49,9 @@ Edit **both** Prisma schemas. The schema is applied with `prisma db push` on sta
 3. Describe what changed and how you tested it, with screenshots for UI changes.
 
 By contributing, you agree that your contributions are licensed under the MIT License.
+
+## Repository settings (maintainers)
+
+- **Topics:** `photography`, `photographer`, `client-gallery`, `proofing`, `self-hosted`, `open-source`, `gallery`
+- **Social preview:** upload `docs/social-preview.png` (1280×640) in Settings → General → Social preview.
+- **README screenshot:** `docs/screenshot.jpg` shows the demo-mode client gallery (photos credited in `demo-photos/CREDITS.md`).
